@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X H R</title>
+</head>
+
+<body>
+    <form action="javascript:void(0)" onsubmit="sendFetch(this)">
+        <select name="url">
+            <option>xhr.php</option>
+        </select>
+        <input type="text" name="xhr" required><br>
+        <input type="submit" value="Przeslij">
+    </form>
+    <section>
+        <h2>Rezultat</h2>
+        <p id="result">
+        </p>
+    </section>
+    <script>
+        function writeResponse(response) {
+            document.getElementById("result").innerHTML = response;
+        }
+
+        function sendXHR(form) {
+            const xhr = new XMLHttpRequest()
+            const fd = new URLSearchParams(new FormData(form))
+            xhr.open("POST", fd.get("url"))
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.addEventListener("load", (event) => {
+                writeResponse(event.target.responseText);
+            })
+            xhr.send(fd)
+        }
+
+        function sendFetch(form) {
+            const fd = new URLSearchParams(new FormData(form))
+            fetch(fd.get("url"), {
+                method: "POST",
+                redirect: "error",
+                body: fd
+            }).then((response) => response.text()).then((response) => {
+                writeResponse(response)
+            })
+        }
+    </script>
+</body>
+
+</html>
